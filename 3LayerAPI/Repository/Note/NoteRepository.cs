@@ -17,9 +17,9 @@ namespace _3LayerAPI.Repository.Note
             return await SaveChangesAsync();
         }
 
-        public Task<ICollection<Models.Note>> GetAllNotesAsync()
+        public async Task<ICollection<Models.Note>> GetAllNotesAsync()
         {
-            throw new NotImplementedException();
+            return await _db.Notes.ToListAsync();
         }
 
         public Task<ICollection<Models.Note>> GetDeletedNotesAsync()
