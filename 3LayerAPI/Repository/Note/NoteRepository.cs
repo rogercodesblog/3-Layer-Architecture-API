@@ -1,5 +1,6 @@
 ﻿
 using _3LayerAPI.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace _3LayerAPI.Repository.Note
 {
@@ -50,14 +51,14 @@ namespace _3LayerAPI.Repository.Note
             throw new NotImplementedException();
         }
 
-        public Task<bool> NoteExistAsync(string title)
+        public async Task<bool> NoteExistAsync(string title)
         {
-            throw new NotImplementedException();
+            return await _db.Notes.AnyAsync(note => note.Title.ToLower().Contains(title.ToLower()));
         }
 
-        public Task<bool> NoteExistAsync(int id)
+        public async Task<bool> NoteExistAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _db.Notes.AnyAsync(note => note.Id == id);
         }
 
         public Task<bool> SoftDeleteNoteAsync(int id)
