@@ -67,9 +67,10 @@ namespace _3LayerAPI.Repository.Note
             throw new NotImplementedException();
         }
 
-        public Task<bool> UpdateNoteAsync(Models.Note note)
+        public async Task<bool> UpdateNoteAsync(Models.Note note)
         {
-            throw new NotImplementedException();
+            _db.Notes.Update(note);
+            return await SaveChangesAsync();
         }
 
         private async Task<bool> SaveChangesAsync()
