@@ -47,9 +47,10 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.Where(note=>note.IsPrivate == true).ToListAsync();
         }
 
-        public Task<bool> HardDeleteNoteAsync(Models.Note note)
+        public async Task<bool> HardDeleteNoteAsync(Models.Note note)
         {
-            throw new NotImplementedException();
+            _db.Notes.Remove(note);
+            return await SaveChangesAsync();
         }
 
         public async Task<bool> NoteExistAsync(string title)
@@ -62,9 +63,17 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.AnyAsync(note => note.Id == id);
         }
 
-        public Task<bool> SoftDeleteNoteAsync(int id)
+        public async Task<bool> SoftDeleteNoteAsync(int id)
         {
-            throw new NotImplementedException();
+            var notetosoftdelete = await GetNoteByIdAsync(id);
+
+            if (notetosoftdelete == null)
+            {
+                return false;
+            }
+
+            notetosoftdelete.IsDeleted = true;
+            return await SaveChangesAsync();
         }
 
         public async Task<bool> UpdateNoteAsync(Models.Note note)
