@@ -24,12 +24,12 @@ namespace _3LayerAPI.Repository.Note
 
         public async Task<ICollection<Models.Note>> GetDeletedNotesAsync()
         {
-            return await _db.Notes.Where(x => x.IsDeleted == true).ToListAsync();
+            return await _db.Notes.Where(note=> note.IsDeleted == true).ToListAsync();
         }
 
-        public Task<Models.Note> GetNoteByIdAsync(int id)
+        public async Task<Models.Note> GetNoteByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            return await _db.Notes.FirstOrDefaultAsync(note => note.Id == id);
         }
 
         public Task<Models.Note> GetNoteByTitleAsync(string title)
