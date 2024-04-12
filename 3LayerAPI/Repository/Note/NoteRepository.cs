@@ -37,9 +37,9 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.FirstOrDefaultAsync(note => note.Title.ToLower().Contains(title.ToLower()));
         }
 
-        public Task<ICollection<Models.Note>> GetNotesAsync()
+        public async Task<ICollection<Models.Note>> GetNotesAsync()
         {
-            throw new NotImplementedException();
+            return await _db.Notes.Where(note => note.IsPrivate == false && note.IsDeleted == false).ToListAsync();
         }
 
         public Task<ICollection<Models.Note>> GetPrivateNotesAsync()
