@@ -42,9 +42,9 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.Where(note => note.IsPrivate == false && note.IsDeleted == false).ToListAsync();
         }
 
-        public Task<ICollection<Models.Note>> GetPrivateNotesAsync()
+        public async Task<ICollection<Models.Note>> GetPrivateNotesAsync()
         {
-            throw new NotImplementedException();
+            return await _db.Notes.Where(note=>note.IsPrivate == true).ToListAsync();
         }
 
         public Task<bool> HardDeleteNoteAsync(Models.Note note)
