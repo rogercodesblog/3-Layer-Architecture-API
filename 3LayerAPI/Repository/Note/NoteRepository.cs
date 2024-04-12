@@ -11,9 +11,10 @@ namespace _3LayerAPI.Repository.Note
         {
             _db = db;
         }
-        public Task<bool> CreateNote(Models.Note note)
-        {
-            throw new NotImplementedException();
+        public async Task<bool> CreateNote(Models.Note note)
+        { 
+            await _db.Notes.AddAsync(note);
+            return await SaveChangesAsync();
         }
 
         public Task<ICollection<Models.Note>> GetAllNotesAsync()
