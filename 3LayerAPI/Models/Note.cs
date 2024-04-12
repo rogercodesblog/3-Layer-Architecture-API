@@ -9,6 +9,11 @@ namespace _3LayerAPI.Models
         [Key]
         public int Id { get; set; }
         [Required]
+        [MinLength(1)]
+        [MaxLength(50)]
+        [Display(Name = "Title")]
+        public string Title { get; set; }
+        [Required]
         [MinLength(3)]
         [MaxLength(255)]
         [Display(Name = "Content")]
