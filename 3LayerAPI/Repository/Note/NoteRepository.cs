@@ -32,9 +32,9 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.FirstOrDefaultAsync(note => note.Id == id);
         }
 
-        public Task<Models.Note> GetNoteByTitleAsync(string title)
+        public async Task<Models.Note> GetNoteByTitleAsync(string title)
         {
-            throw new NotImplementedException();
+            return await _db.Notes.FirstOrDefaultAsync(note => note.Title.ToLower().Contains(title.ToLower()));
         }
 
         public Task<ICollection<Models.Note>> GetNotesAsync()
