@@ -22,9 +22,9 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.ToListAsync();
         }
 
-        public Task<ICollection<Models.Note>> GetDeletedNotesAsync()
+        public async Task<ICollection<Models.Note>> GetDeletedNotesAsync()
         {
-            throw new NotImplementedException();
+            return await _db.Notes.Where(x => x.IsDeleted == true).ToListAsync();
         }
 
         public Task<Models.Note> GetNoteByIdAsync(int id)
