@@ -1,8 +1,15 @@
 ﻿
+using _3LayerAPI.Data;
+
 namespace _3LayerAPI.Repository.Note
 {
     public class NoteRepository : INoteRepository
     {
+        private readonly ApplicationDbContext _db;
+        public NoteRepository(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         public Task<bool> CreateNote(Models.Note note)
         {
             throw new NotImplementedException();
@@ -61,6 +68,11 @@ namespace _3LayerAPI.Repository.Note
         public Task<bool> UpdateNoteAsync(Models.Note note)
         {
             throw new NotImplementedException();
+        }
+
+        private async Task<bool> SaveChangesAsync()
+        {
+            return await _db.SaveChangesAsync() >= 0 ? true : false;
         }
     }
 }
