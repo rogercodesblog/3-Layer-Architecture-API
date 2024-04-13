@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace _3LayerAPI.Models
+namespace _3LayerAPI.DTOs.Note
 {
     public class CreateNoteDTO
     {
