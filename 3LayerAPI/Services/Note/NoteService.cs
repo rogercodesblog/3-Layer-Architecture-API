@@ -1,10 +1,21 @@
 ﻿using _3LayerAPI.DTOs.Note;
+using _3LayerAPI.Repository.Note;
 using _3LayerAPI.ServiceResponder;
+using AutoMapper;
 
 namespace _3LayerAPI.Services.Note
 {
     public class NoteService : INoteService
     {
+        private readonly INoteRepository _noteRepo;
+        private readonly IMapper _mapper;
+
+        public NoteService(INoteRepository noteRepo, IMapper mapper)
+        {
+            _noteRepo = noteRepo;
+            _mapper = mapper;
+        }
+
         public Task<ServiceResponse<NoteDTO>> AddNoteAsync(CreateNoteDTO createNoteDto)
         {
             throw new NotImplementedException();
