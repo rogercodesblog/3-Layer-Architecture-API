@@ -32,11 +32,6 @@ namespace _3LayerAPI.Repository.Note
             return await _db.Notes.FirstOrDefaultAsync(note => note.Id == id);
         }
 
-        public async Task<Models.Note> GetNoteByTitleAsync(string title)
-        {
-            return await _db.Notes.FirstOrDefaultAsync(note => note.Title.ToLower().Contains(title.ToLower()));
-        }
-
         public async Task<ICollection<Models.Note>> GetNotesAsync()
         {
             return await _db.Notes.Where(note => note.IsPrivate == false && note.IsDeleted == false).ToListAsync();
