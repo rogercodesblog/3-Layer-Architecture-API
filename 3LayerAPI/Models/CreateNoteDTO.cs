@@ -1,0 +1,18 @@
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace _3LayerAPI.Models
+{
+    public class CreateNoteDTO
+    {
+        [Required]
+        [MinLength(1)]
+        [MaxLength(50)]
+        [Display(Name = "Title")]
+        public string Title { get; set; }
+        [Required]
+        [MinLength(3)]
+        [MaxLength(255)]
+        [Display(Name = "Content")]
+        public string Content { get; set; }
+    }
+}
