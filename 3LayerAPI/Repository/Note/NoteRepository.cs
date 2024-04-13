@@ -11,7 +11,7 @@ namespace _3LayerAPI.Repository.Note
         {
             _db = db;
         }
-        public async Task<bool> CreateNote(Models.Note note)
+        public async Task<bool> CreateNoteAsync(Models.Note note)
         { 
             await _db.Notes.AddAsync(note);
             return await SaveChangesAsync();

@@ -4,7 +4,7 @@
     {
         Task<bool> NoteExistAsync(string title);
         Task<bool> NoteExistAsync(int id);
-        Task<bool> CreateNote(Models.Note note);
+        Task<bool> CreateNoteAsync(Models.Note note);
         Task<Models.Note> GetNoteByIdAsync(int id);
         Task<ICollection<Models.Note>> GetAllNotesAsync();
         Task<ICollection<Models.Note>> GetNotesAsync();

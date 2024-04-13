@@ -2,6 +2,7 @@
 using _3LayerAPI.Repository.Note;
 using _3LayerAPI.ServiceResponder;
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace _3LayerAPI.Services.Note
 {
@@ -16,9 +17,50 @@ namespace _3LayerAPI.Services.Note
             _mapper = mapper;
         }
 
-        public Task<ServiceResponse<NoteDTO>> AddNoteAsync(CreateNoteDTO createNoteDto)
+        public async Task<ServiceResponse<NoteDTO>> AddNoteAsync(CreateNoteDTO createNoteDto)
         {
-            throw new NotImplementedException();
+            ServiceResponse<NoteDTO> _response = new ServiceResponse<NoteDTO>();
+            try
+            {
+
+                if (await _noteRepo.NoteExistAsync(createNoteDto.Title))
+                {
+                    _response.Success = false;
+                    _response.Data = null;
+                    _response.Message = "A Note with that title already exists";
+                    return _response;
+                }
+
+                Models.Note newnote = new Models.Note()
+                {
+                    Title = createNoteDto.Title,
+                    Content = createNoteDto.Content,
+                    DateCreated = DateTimeOffset.UtcNow,
+                    IsDeleted = false,
+                    IsPrivate = createNoteDto.IsPrivate
+                };
+
+                if(!await _noteRepo.CreateNoteAsync(newnote)) 
+                {
+                    _response.Success = false;
+                    _response.Data = null;
+                    _response.Message = "There was an error in Repository";
+                    return _response;
+                }
+
+                _response.Success = true;
+                _response.Data = _mapper.Map<NoteDTO>(newnote);
+                _response.Message = "The new note was created successfully";
+                
+            }
+            catch (Exception ex)
+            {
+                _response.Success = false;
+                _response.Data = null;
+                _response.Message = "There was an internal server error, please try again.";
+                _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
+            }
+            return _response;
         }
 
         public Task<ServiceResponse<List<NoteDTO>>> GetAllNotesAsync()

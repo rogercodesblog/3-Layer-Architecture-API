@@ -14,5 +14,6 @@ namespace _3LayerAPI.DTOs.Note
         [MaxLength(255)]
         [Display(Name = "Content")]
         public string Content { get; set; }
+        public bool IsPrivate { get; set; }
     }
 }
