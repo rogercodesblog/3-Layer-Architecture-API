@@ -197,9 +197,42 @@ namespace _3LayerAPI.Services.Note
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResponse<string>> SoftDeleteNoteAsync(int id)
+        public async Task<ServiceResponse<string>> SoftDeleteNoteAsync(int id)
         {
-            throw new NotImplementedException();
+            ServiceResponse<string> _response = new ServiceResponse<string>();
+
+            try
+            {
+                bool _existingNote = await _noteRepo.NoteExistAsync(id);
+
+                if(_existingNote == false)
+                {
+                    _response.Success = false;
+                    _response.Message = "The note was not found";
+                    _response.Data = null;
+                    return _response;
+                }
+
+                if(!await _noteRepo.SoftDeleteNoteAsync(id))
+                {
+                    _response.Success = false;
+                    _response.Message = "Internal repo error";
+                    return _response;
+                }
+
+                _response.Success = true;
+                _response.Message = "The note was soft deleted successfully";
+
+            }
+            catch (Exception ex)
+            {
+                _response.Success = false;
+                _response.Data = null;
+                _response.Message = "Error";
+                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
+            }
+
+            return _response;
         }
 
         public Task<ServiceResponse<NoteDTO>> UpdateNoteAsync(CreateNoteDTO updateNoteDto)
