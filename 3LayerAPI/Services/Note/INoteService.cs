@@ -1,4 +1,5 @@
-﻿using _3LayerAPI.ServiceResponder;
+﻿using _3LayerAPI.DTOs.Note;
+using _3LayerAPI.ServiceResponder;
 
 namespace _3LayerAPI.Services.Note
 {
@@ -12,6 +13,6 @@ namespace _3LayerAPI.Services.Note
         Task<ServiceResponse<DTOs.Note.NoteDTO>> AddNoteAsync(DTOs.Note.CreateNoteDTO createNoteDto);
         Task<ServiceResponse<DTOs.Note.NoteDTO>> UpdateNoteAsync(DTOs.Note.CreateNoteDTO updateNoteDto);
         Task<ServiceResponse<string>> SoftDeleteNoteAsync(int id);
-        Task<ServiceResponse<string>> HardDeleteNoteAsync(int id);
+        Task<ServiceResponse<string>> HardDeleteNoteAsync(DTOs.Note.NoteDTO note);
     }
 }
