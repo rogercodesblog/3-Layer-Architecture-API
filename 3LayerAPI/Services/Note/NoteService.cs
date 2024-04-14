@@ -268,9 +268,47 @@ namespace _3LayerAPI.Services.Note
             return _response;
         }
 
-        public Task<ServiceResponse<NoteDTO>> UpdateNoteAsync(CreateNoteDTO updateNoteDto)
+        public async Task<ServiceResponse<NoteDTO>> UpdateNoteAsync(UpdateNoteDTO updateNoteDto)
         {
-            throw new NotImplementedException();
+            ServiceResponse<NoteDTO> _response = new ServiceResponse<NoteDTO>();
+
+            try
+            {
+                var _noteToUpdate = await _noteRepo.GetNoteByIdAsync(updateNoteDto.Id);
+
+                if(_noteToUpdate == null)
+                {
+                    _response.Success = false;
+                    _response.Message = "Note was not found";
+                    _response.Data = null;
+                    return _response;
+                }
+
+                _noteToUpdate.Title = updateNoteDto.Title;
+                _noteToUpdate.Content = updateNoteDto.Content;
+                _noteToUpdate.IsPrivate = updateNoteDto.IsPrivate;
+
+                if(!await _noteRepo.UpdateNoteAsync(_noteToUpdate))
+                {
+                    _response.Success = false;
+                    _response.Message = "Repository Error";
+                    _response.Data = null;
+                    return _response;
+                }
+
+                var _noteDto = _mapper.Map<NoteDTO>(_noteToUpdate);
+                _response.Success = true;
+                _response.Message = "Note was updated Successfully";
+                _response.Data = _noteDto;
+            }
+            catch (Exception ex)
+            {
+                _response.Success = false;
+                _response.Data = null;
+                _response.Message = "Error";
+                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
+            }
+            return _response;
         }
     }
 }
