@@ -167,9 +167,29 @@ namespace _3LayerAPI.Services.Note
             return _response;
         }
 
-        public Task<ServiceResponse<List<NoteDTO>>> GetPrivateNotesAsync()
+        public async Task<ServiceResponse<List<NoteDTO>>> GetPrivateNotesAsync()
         {
-            throw new NotImplementedException();
+            ServiceResponse<List<NoteDTO>> _response = new ServiceResponse<List<NoteDTO>>();
+            try
+            {
+                var noteList = await _noteRepo.GetPrivateNotesAsync();
+                var noteDtoList = new List<NoteDTO>();
+                foreach (var note in noteList)
+                {
+                    noteDtoList.Add(_mapper.Map<NoteDTO>(note));
+                }
+                _response.Success = true;
+                _response.Message = "OK";
+                _response.Data = noteDtoList;
+            }
+            catch (Exception ex)
+            {
+                _response.Success = false;
+                _response.Data = null;
+                _response.Message = "Error";
+                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
+            }
+            return _response;
         }
 
         public Task<ServiceResponse<string>> HardDeleteNoteAsync(int id)
