@@ -93,9 +93,33 @@ namespace _3LayerAPI.Services.Note
             throw new NotImplementedException();
         }
 
-        public Task<ServiceResponse<NoteDTO>> GetNoteByIdAsync(int id)
+        public async Task<ServiceResponse<NoteDTO>> GetNoteByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            ServiceResponse<NoteDTO> _response = new ServiceResponse<NoteDTO>();
+            try
+            {
+                var _note = await _noteRepo.GetNoteByIdAsync(id);
+
+                if(_note == null)
+                {
+                    _response.Success = false;
+                    _response.Message = "The note was not found";
+                    return _response;
+                }
+                var _noteDto = _mapper.Map<NoteDTO>(_note);
+
+                _response.Success = true;
+                _response.Message = "Ok";
+                _response.Data = _noteDto;
+            }
+            catch (Exception ex)
+            {
+                _response.Success = false;
+                _response.Data = null;
+                _response.Message = "Error";
+                _response.ErrorMessages = new List<string>() { Convert.ToString(ex.Message) };
+            }
+            return _response;
         }
 
         public Task<ServiceResponse<List<NoteDTO>>> GetNotesAsync()
