@@ -31,6 +31,13 @@ namespace _3LayerAPI.Controllers
             return Ok(notes);
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
+        public async Task<IActionResult> GetDeletedNotesAsync()
+        {
+            var notes = await _noteService.GetDeletedNotesAsync();
+            return Ok(notes);
+        }
 
     }
 }
