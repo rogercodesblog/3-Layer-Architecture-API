@@ -39,5 +39,13 @@ namespace _3LayerAPI.Controllers
             return Ok(notes);
         }
 
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
+        public async Task<IActionResult> GetPrivateNotesAsync()
+        {
+            var notes = await _noteService.GetPrivateNotesAsync();
+            return Ok(notes);
+        }
+
     }
 }
