@@ -15,7 +15,7 @@ namespace _3LayerAPI.Controllers
                 _noteService = noteservice;
         }
 
-        [HttpGet]
+        [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
         public async Task<IActionResult> GetNotesAsync()
         {
@@ -23,7 +23,7 @@ namespace _3LayerAPI.Controllers
             return Ok(notes);
         }
 
-        [HttpGet]
+        [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
         public async Task<IActionResult> GetAllNotesAsync()
         {
@@ -31,7 +31,7 @@ namespace _3LayerAPI.Controllers
             return Ok(notes);
         }
 
-        [HttpGet]
+        [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
         public async Task<IActionResult> GetDeletedNotesAsync()
         {
@@ -39,12 +39,33 @@ namespace _3LayerAPI.Controllers
             return Ok(notes);
         }
 
-        [HttpGet]
+        [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
         public async Task<IActionResult> GetPrivateNotesAsync()
         {
             var notes = await _noteService.GetPrivateNotesAsync();
             return Ok(notes);
+        }
+
+        [HttpGet("/[action]")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NoteDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<NoteDTO>> GetNoteByIdAsync(int id)
+        {
+            if (id <= 0)
+            {
+                return BadRequest(id);
+            }
+
+            var note = await _noteService.GetNoteByIdAsync(id);
+
+            if(note.Data == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(note);
         }
 
     }
