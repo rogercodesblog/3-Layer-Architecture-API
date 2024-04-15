@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using _3LayerAPI.Services.Note;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _3LayerAPI.Controllers
@@ -7,5 +8,11 @@ namespace _3LayerAPI.Controllers
     [ApiController]
     public class NoteController : ControllerBase
     {
+        private readonly INoteService _noteService;
+        public NoteController(INoteService noteservice)
+        {
+                _noteService = noteservice;
+        }
+
     }
 }
