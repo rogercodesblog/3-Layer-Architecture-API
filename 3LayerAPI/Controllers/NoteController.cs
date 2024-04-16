@@ -17,7 +17,7 @@ namespace _3LayerAPI.Controllers
 
         [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
-        public async Task<IActionResult> GetNotesAsync()
+        public async Task<ActionResult> GetNotes()
         {
             var notes = await _noteService.GetNotesAsync();
             return Ok(notes);
@@ -25,7 +25,7 @@ namespace _3LayerAPI.Controllers
 
         [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
-        public async Task<IActionResult> GetAllNotesAsync()
+        public async Task<ActionResult> GetAllNotes()
         {
             var notes = await _noteService.GetAllNotesAsync();
             return Ok(notes);
@@ -33,7 +33,7 @@ namespace _3LayerAPI.Controllers
 
         [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
-        public async Task<IActionResult> GetDeletedNotesAsync()
+        public async Task<ActionResult> GetDeletedNotes()
         {
             var notes = await _noteService.GetDeletedNotesAsync();
             return Ok(notes);
@@ -41,7 +41,7 @@ namespace _3LayerAPI.Controllers
 
         [HttpGet("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<NoteDTO>))]
-        public async Task<IActionResult> GetPrivateNotesAsync()
+        public async Task<ActionResult> GetPrivateNotes()
         {
             var notes = await _noteService.GetPrivateNotesAsync();
             return Ok(notes);
@@ -51,7 +51,7 @@ namespace _3LayerAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NoteDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<NoteDTO>> GetNoteByIdAsync(int id)
+        public async Task<ActionResult<NoteDTO>> GetNoteById(int id)
         {
             if (id <= 0)
             {
@@ -66,6 +66,42 @@ namespace _3LayerAPI.Controllers
             }
 
             return Ok(note);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NoteDTO))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<NoteDTO>> CreateNote([FromBody] CreateNoteDTO createNoteDTO)
+        {
+            if(createNoteDTO == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var _newNote = await _noteService.AddNoteAsync(createNoteDTO);
+
+            if (_newNote.Success == false || _newNote.Message == "Exist")
+            {
+                return Ok(_newNote);
+            }
+            if (_newNote.Success == false || _newNote.Message == "RepositoryError")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding company {createNoteDTO}");
+                return StatusCode(500, ModelState);
+            }
+            if (_newNote.Success == false || _newNote.Message == "Error")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in service layer when adding company {createNoteDTO}");
+                return StatusCode(500, ModelState);
+            }
+
+            return CreatedAtRoute("GetNoteById", new { id = _newNote.Data.Id }, _newNote);
         }
 
     }

@@ -44,7 +44,7 @@ namespace _3LayerAPI.Services.Note
                 {
                     _response.Success = false;
                     _response.Data = null;
-                    _response.Message = "There was an error in Repository";
+                    _response.Message = "RepositoryError";
                     return _response;
                 }
 
@@ -57,7 +57,7 @@ namespace _3LayerAPI.Services.Note
             {
                 _response.Success = false;
                 _response.Data = null;
-                _response.Message = "There was an internal server error, please try again.";
+                _response.Message = "Error";
                 _response.ErrorMessages = new List<string> { Convert.ToString(ex.Message) };
             }
             return _response;
@@ -211,12 +211,12 @@ namespace _3LayerAPI.Services.Note
                 if (!await _noteRepo.HardDeleteNoteAsync(_notetodelete))
                 {
                     _response.Success = false;
-                    _response.Message = "Internal repo error";
+                    _response.Message = "RepositoryError";
                     return _response;
                 }
 
                 _response.Success = true;
-                _response.Message = "The note was soft deleted successfully";
+                _response.Message = "The note was deleted successfully";
 
             }
             catch (Exception ex)
@@ -249,7 +249,7 @@ namespace _3LayerAPI.Services.Note
                 if(!await _noteRepo.SoftDeleteNoteAsync(id))
                 {
                     _response.Success = false;
-                    _response.Message = "Internal repo error";
+                    _response.Message = "RepositoryError";
                     return _response;
                 }
 
@@ -291,7 +291,7 @@ namespace _3LayerAPI.Services.Note
                 if(!await _noteRepo.UpdateNoteAsync(_noteToUpdate))
                 {
                     _response.Success = false;
-                    _response.Message = "Repository Error";
+                    _response.Message = "RepositoryError";
                     _response.Data = null;
                     return _response;
                 }
