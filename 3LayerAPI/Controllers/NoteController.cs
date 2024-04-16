@@ -68,7 +68,7 @@ namespace _3LayerAPI.Controllers
             return Ok(note);
         }
 
-        [HttpPost]
+        [HttpPost("/action")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NoteDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -102,6 +102,44 @@ namespace _3LayerAPI.Controllers
             }
 
             return CreatedAtRoute("GetNoteById", new { id = _newNote.Data.Id }, _newNote);
+        }
+
+        [HttpPut("/[action]")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<NoteDTO>> UpdateNote([FromBody] UpdateNoteDTO updateNoteDTO)
+        {
+            if (updateNoteDTO == null)
+            {
+                return BadRequest(ModelState);
+            }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var _updateNote = await _noteService.UpdateNoteAsync(updateNoteDTO);
+
+            if(_updateNote.Success == false || _updateNote.Message == "Note was not found")
+            {
+                ModelState.AddModelError("", "Address Not found");
+                return StatusCode(404, ModelState);
+            }
+
+            if (_updateNote.Success == false || _updateNote.Message == "RepositoryError")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in respository layer when adding company {_updateNote}");
+                return StatusCode(500, ModelState);
+            }
+            if (_updateNote.Success == false || _updateNote.Message == "Error")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong in service layer when adding company {_updateNote}");
+                return StatusCode(500, ModelState);
+            }
+
+            return Ok(_updateNote);
         }
 
     }
