@@ -68,7 +68,7 @@ namespace _3LayerAPI.Controllers
             return Ok(note);
         }
 
-        [HttpPost("/action")]
+        [HttpPost("/[action]")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(NoteDTO))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -140,6 +140,38 @@ namespace _3LayerAPI.Controllers
             }
 
             return Ok(_updateNote);
+        }
+
+        [HttpDelete("/[action]")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> SoftDelete(int id)
+        {
+
+            var _deleteNote = await _noteService.SoftDeleteNoteAsync(id);
+
+            if (_deleteNote.Success == false && _deleteNote.Data == "NotFound")
+            {
+                ModelState.AddModelError("", "Note Not found");
+                return StatusCode(404, ModelState);
+            }
+
+            if (_deleteNote.Success == false && _deleteNote.Data == "RepositoryError")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong at Repository layer when deleting Address");
+                return StatusCode(500, ModelState);
+            }
+
+            if (_deleteNote.Success == false && _deleteNote.Data == "Error")
+            {
+                ModelState.AddModelError("", $"Some thing went wrong at service layer when deleting Address");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+
         }
 
     }
